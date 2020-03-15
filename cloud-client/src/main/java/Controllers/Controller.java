@@ -1,19 +1,16 @@
 package Controllers;
 
 
-//import communication.SendMessage;
+import Communication.MyClientServer;
+import WorkingWithMessage.SendMessage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-//import networkCommunication.IService;
-//import networkCommunication.MyServerClient;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -26,18 +23,28 @@ public class Controller implements Initializable {
 
     //work window
     //client
-    public TableColumn table_clientName;
-    public TableColumn table_clientSize;
-    public TableColumn table_clientDate;
     public ProgressBar pb_client;
+    public TableView<FileForTable> table_client;
+    public TableColumn<FileForTable,String> table_clientName;
+    public TableColumn<FileForTable,String> table_clientSize;
+    public TableColumn<FileForTable,String> table_clientDate;
+    public ObservableList<FileForTable> fileData = FXCollections.observableArrayList();
+
     //server
     public TableColumn table_serverName;
     public TableColumn table_serverSize;
     public TableColumn table_serverDate;
 
 
-//    private IService messageService;
-//    private SendMessage sendMessage;
+
+    private MyClientServer messageService;
+    private SendMessage sendMessage;
+
+    private String client;
+
+    public void setClient(String client) {
+        this.client = client;
+    }
 
     public void shutdown() {
         //System.exit(0);
@@ -45,25 +52,30 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        try{
-////            this.messageService = new MyServerClient(this);
-////            //this.getMessage = new GetMessage(this.messageService,this);
-////            this.sendMessage = new SendMessage(this.messageService);
-//
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try{
+            this.messageService = new MyClientServer(this);
+            this.sendMessage = new SendMessage(this.messageService);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //button login
     public void login_buttonSignIn(ActionEvent actionEvent) {
-        ChangeStage.changeStageDo((Stage) testField_pass.getScene().getWindow(), "/workInterface.fxml",
-                "Work window "+textField_login.getText());
+        sendMessage.sendSighIn(textField_login.getText(), testField_pass.getText());
     }
 
     //button clients
     public void button_sendToService(ActionEvent actionEvent) {
+        File file = new File("cloud-client/storage/1.txt");
+
+        try {
+            sendMessage.sendFileToServer("user1",file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void button_delete(ActionEvent actionEvent) {
@@ -78,7 +90,4 @@ public class Controller implements Initializable {
 
     public void button_exit(ActionEvent actionEvent) {
     }
-
-
-
 }
