@@ -60,7 +60,7 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="9" GridPane.rowIndex="2" GridPane.rowSpan="18">
+                  <TableView fx:id="table_client" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="9" GridPane.rowIndex="2" GridPane.rowSpan="18">
                     <columns>
                       <TableColumn fx:id="table_clientName" prefWidth="145.0" text="Name of file" />
                       <TableColumn fx:id="table_clientSize" prefWidth="70.0" text="Size" />
